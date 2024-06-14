@@ -1,0 +1,3720 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /admin/auth/login:
+    post:
+      tags:
+        - admin/auth
+      summary: Login For Access Token
+      description: |-
+        Аутентификация пользователя и генерация токена доступа.
+
+        :param request: Запрос FastAPI.
+        :param form_data: Данные формы запроса, включая логин и пароль.
+        :return: Токен доступа.
+      operationId: login_for_access_token_admin_auth_login_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_for_access_token_admin_auth_login_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/auth/logout:
+    post:
+      tags:
+        - admin/auth
+      summary: Logout
+      description: |-
+        Разлогинивание пользователя.
+
+        :param request: Запрос FastAPI.
+        :param token: Токен доступа.
+        :param current_user: Текущий пользователь.
+        :return: Сообщение об успешном разлогинивании.
+      operationId: logout_admin_auth_logout_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/auth/validate:
+    post:
+      tags:
+        - admin/auth
+      summary: Token Validate
+      description: |-
+        Проверка валидности токена доступа.
+
+        :param token: Токен доступа.
+        :param current_user: Текущий пользователь.
+        :return: Сообщение об успешной проверке токена доступа.
+      operationId: token_validate_admin_auth_validate_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/auth/me:
+    get:
+      tags:
+        - admin/auth
+      summary: Get Current Admin User Info
+      description: |-
+        Получение информации о текущем администраторе.
+
+        :param request: Запрос FastAPI.
+        :param current_user: Текущий администратор.
+        :return: Информация о текущем администраторе.
+      operationId: get_current_admin_user_info_admin_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminInDBResponse'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/business-profiles/:
+    get:
+      tags:
+        - admin/business-profiles
+      summary: Get All Business Profiles
+      description: |-
+        Получение списка всех бизнес-профилей.
+
+        :param current_user: Текущий администратор.
+        :return: Список всех бизнес-профилей.
+      operationId: get_all_business_profiles_admin_business_profiles__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BusinessProfile'
+                type: array
+                title: Response Get All Business Profiles Admin Business Profiles  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/business-profiles
+      summary: Create Business Profile
+      description: |-
+        Создание нового бизнес-профиля.
+
+        :param business_profile_data: Данные нового бизнес-профиля.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном бизнес-профиле.
+      operationId: create_business_profile_admin_business_profiles__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessProfileCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessProfileInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/business-profiles/{business_profile_id}:
+    get:
+      tags:
+        - admin/business-profiles
+      summary: Get Business Profile
+      description: |-
+        Получение информации о конкретном бизнес-профиле.
+
+        :param business_profile_id: ID бизнес-профиля.
+        :param current_user: Текущий администратор.
+        :return: Информация о бизнес-профиле.
+      operationId: get_business_profile_admin_business_profiles__business_profile_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: business_profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Business Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BusinessProfile'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/business-profiles
+      summary: Update Business Profile
+      description: |-
+        Обновление информации о бизнес-профиле.
+
+        :param business_profile_id: ID бизнес-профиля.
+        :param profile_data: Новые данные о бизнес-профиле.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении данных бизнес-профиля.
+      operationId: update_business_profile_admin_business_profiles__business_profile_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: business_profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Business Profile Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessProfileUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/business-profiles
+      summary: Delete Business Profile
+      description: |-
+        Удаление бизнес-профиля.
+
+        :param business_profile_id: ID бизнес-профиля.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении бизнес-профиля.
+      operationId: delete_business_profile_admin_business_profiles__business_profile_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: business_profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Business Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/business-profiles/{business_profile_id}/locations:
+    get:
+      tags:
+        - admin/business-profiles
+      summary: Get Locations By Business Profile
+      description: |-
+        Получение списка локаций для определенного бизнес-профиля.
+
+        :param business_profile_id: ID бизнес-профиля.
+        :param current_user: Текущий администратор.
+        :return: Список локаций для указанного бизнес-профиля.
+      operationId: get_locations_by_business_profile_admin_business_profiles__business_profile_id__locations_get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: business_profile_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Business Profile Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/api__models__admin__locations_models__LocationInDB'
+                title: Response Get Locations By Business Profile Admin Business Profiles  Business Profile Id  Locations Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/locations/:
+    get:
+      tags:
+        - admin/locations
+      summary: Get All Locations
+      description: |-
+        Получение списка всех локаций.
+
+        :param current_user: Текущий администратор.
+        :return: Список всех локаций.
+      operationId: get_all_locations_admin_locations__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/api__models__admin__locations_models__LocationInDB'
+                type: array
+                title: Response Get All Locations Admin Locations  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/locations
+      summary: Create Location
+      description: |-
+        Создание новой локации.
+
+        :param location_data: Данные новой локации.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданной локации.
+      operationId: create_location_admin_locations__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__admin__locations_models__LocationInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/locations/{location_id}:
+    get:
+      tags:
+        - admin/locations
+      summary: Get Location
+      description: |-
+        Получение информации о конкретной локации.
+
+        :param location_id: ID локации.
+        :param current_user: Текущий администратор.
+        :return: Информация о локации.
+      operationId: get_location_admin_locations__location_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Location Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__admin__locations_models__LocationInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/locations
+      summary: Update Location
+      description: |-
+        Обновление информации о локации.
+
+        :param location_id: ID локации.
+        :param location_data: Новые данные о локации.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении данных локации.
+      operationId: update_location_admin_locations__location_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Location Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LocationUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/locations
+      summary: Delete Location
+      description: |-
+        Удаление локации.
+
+        :param location_id: ID локации.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении локации.
+      operationId: delete_location_admin_locations__location_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Location Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/locations/{location_id}/offices:
+    get:
+      tags:
+        - admin/locations
+      summary: Get Offices By Location
+      description: |-
+        Получение списка офисов для определенной локации.
+
+        :param location_id: ID локации.
+        :param current_user: Текущий администратор.
+        :return: Список офисов для указанной локации.
+      operationId: get_offices_by_location_admin_locations__location_id__offices_get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Location Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/api__models__admin__offices_models__OfficeInDB'
+                title: Response Get Offices By Location Admin Locations  Location Id  Offices Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/offices/:
+    get:
+      tags:
+        - admin/offices
+      summary: Get All Offices
+      description: |-
+        Получение списка всех офисов.
+
+        :param current_user: Текущий администратор.
+        :return: Список офисов.
+      operationId: get_all_offices_admin_offices__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/api__models__admin__offices_models__OfficeInDB'
+                type: array
+                title: Response Get All Offices Admin Offices  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/offices
+      summary: Create Office
+      description: |-
+        Создание нового офиса.
+
+        :param office_data: Данные нового офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном офисе.
+      operationId: create_office_admin_offices__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfficeCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__admin__offices_models__OfficeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/offices/{office_id}:
+    get:
+      tags:
+        - admin/offices
+      summary: Get Office
+      description: |-
+        Получение информации об офисе по его ID.
+
+        :param office_id: ID офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация об офисе.
+      operationId: get_office_admin_offices__office_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__admin__offices_models__OfficeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/offices
+      summary: Update Office
+      description: |-
+        Обновление информации об офисе.
+
+        :param office_id: ID офиса.
+        :param office_data: Новые данные офиса.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении данных офиса.
+      operationId: update_office_admin_offices__office_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfficeUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/offices
+      summary: Delete Office
+      description: |-
+        Удаление офиса.
+
+        :param office_id: ID офиса.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении офиса.
+      operationId: delete_office_admin_offices__office_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/locks/:
+    get:
+      tags:
+        - admin/locks
+      summary: Get All Locks
+      description: |-
+        Получение списка всех замков.
+
+        :param current_user: Текущий администратор.
+        :return: Список всех замков.
+      operationId: get_all_locks_admin_locks__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/LockInDB'
+                type: array
+                title: Response Get All Locks Admin Locks  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/locks
+      summary: Create Lock
+      description: |-
+        Создание нового замка.
+
+        :param lock_data: Данные нового замка.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном замке.
+      operationId: create_lock_admin_locks__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LockInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/locks/{lock_id}:
+    get:
+      tags:
+        - admin/locks
+      summary: Get Lock
+      description: |-
+        Получение информации о конкретном замке.
+
+        :param lock_id: ID замка.
+        :param current_user: Текущий администратор.
+        :return: Информация о замке.
+      operationId: get_lock_admin_locks__lock_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LockInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/locks
+      summary: Update Lock
+      description: |-
+        Обновление информации о замке.
+
+        :param lock_id: ID замка.
+        :param lock_data: Новые данные о замке.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении данных замка.
+      operationId: update_lock_admin_locks__lock_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/locks
+      summary: Delete Lock
+      description: |-
+        Удаление замка.
+
+        :param lock_id: ID замка.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении замка.
+      operationId: delete_lock_admin_locks__lock_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/locks/{lock_id}/passcodes:
+    get:
+      tags:
+        - admin/locks
+      summary: Get All Passcodes
+      description: |-
+        Получение списка всех паролей для замка.
+
+        :param lock_id: ID замка.
+        :param current_user: Текущий администратор.
+        :return: Список всех паролей для замка.
+      operationId: get_all_passcodes_admin_locks__lock_id__passcodes_get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LockPasscodeInDB'
+                title: Response Get All Passcodes Admin Locks  Lock Id  Passcodes Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+        - admin/locks
+      summary: Create Passcode
+      description: |-
+        Создание нового пароля для замка.
+
+        :param lock_id: ID замка.
+        :param passcode_data: Данные нового пароля для замка.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном пароле для замка.
+      operationId: create_passcode_admin_locks__lock_id__passcodes_post
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockPasscodeCreate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LockPasscodeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/locks/{lock_id}/passcodes/{passcode_id}:
+    put:
+      tags:
+        - admin/locks
+      summary: Update Passcode
+      description: |-
+        Обновление информации о пароле для замка.
+
+        :param lock_id: ID замка.
+        :param passcode_id: ID пароля для замка.
+        :param passcode_data: Новые данные о пароле для замка.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении пароля для замка.
+      operationId: update_passcode_admin_locks__lock_id__passcodes__passcode_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+        - name: passcode_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Passcode Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockPasscodeUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/locks
+      summary: Delete Passcode
+      description: |-
+        Удаление пароля для замка.
+
+        :param lock_id: ID замка.
+        :param passcode_id: ID пароля для замка.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении пароля для замка.
+      operationId: delete_passcode_admin_locks__lock_id__passcodes__passcode_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock Id
+        - name: passcode_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Passcode Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/renters/:
+    get:
+      tags:
+        - admin/renters
+      summary: Get All Renters
+      description: |-
+        Получение списка всех арендаторов.
+
+        :param current_user: Текущий администратор.
+        :return: Список арендаторов.
+      operationId: get_all_renters_admin_renters__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/api__models__admin__renters_models__RenterInDB'
+                type: array
+                title: Response Get All Renters Admin Renters  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/renters
+      summary: Create Renter
+      description: |-
+        Создание нового арендатора.
+
+        :param renter_data: Данные нового арендатора.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном арендаторе.
+      operationId: create_renter_admin_renters__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenterCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__admin__renters_models__RenterInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/renters/{renter_id}:
+    get:
+      tags:
+        - admin/renters
+      summary: Get Renter
+      description: |-
+        Получение информации об арендаторе по его ID.
+
+        :param renter_id: ID арендатора.
+        :param current_user: Текущий администратор.
+        :return: Информация об арендаторе.
+      operationId: get_renter_admin_renters__renter_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: renter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Renter Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__admin__renters_models__RenterInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/renters
+      summary: Update Renter
+      description: |-
+        Обновление информации об арендаторе.
+
+        :param renter_id: ID арендатора.
+        :param renter_data: Новые данные арендатора.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении информации об арендаторе.
+      operationId: update_renter_admin_renters__renter_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: renter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Renter Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenterUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/renters
+      summary: Delete Renter
+      description: |-
+        Удаление арендатора.
+
+        :param renter_id: ID арендатора.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении арендатора.
+      operationId: delete_renter_admin_renters__renter_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: renter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Renter Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/lock-systems/:
+    get:
+      tags:
+        - admin/lock-systems
+      summary: Get All Lock Systems
+      description: |-
+        Получение списка всех замочных систем.
+
+        :param current_user: Текущий администратор.
+        :return: Список всех замочных систем.
+      operationId: get_all_lock_systems_admin_lock_systems__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/LockSystemInDB'
+                type: array
+                title: Response Get All Lock Systems Admin Lock Systems  Get
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/lock-systems/{lock_system_id}:
+    get:
+      tags:
+        - admin/lock-systems
+      summary: Get Lock System
+      description: |-
+        Получение информации о конкретной замочной системе.
+
+        :param lock_system_id: ID замочной системы.
+        :param current_user: Текущий администратор.
+        :return: Информация о замочной системе.
+      operationId: get_lock_system_admin_lock_systems__lock_system_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_system_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock System Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LockSystemInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/lock-systems
+      summary: Update Lock System Api Key
+      description: |-
+        Обновление API ключа замочной системы.
+
+        :param lock_system_id: ID замочной системы.
+        :param lock_system_data: Новый API ключ замочной системы.
+        :param current_user: Текущий администратор.
+        :return: Информация о замочной системе с обновленным API ключом.
+      operationId: update_lock_system_api_key_admin_lock_systems__lock_system_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: lock_system_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Lock System Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LockSystemUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LockSystemInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/office-types/:
+    get:
+      tags:
+        - admin/office-types
+      summary: Get All Office Types
+      description: |-
+        Получение списка всех типов офисов.
+
+        :param current_user: Текущий администратор.
+        :return: Список типов офисов.
+      operationId: get_all_office_types_admin_office_types__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/OfficeTypeInDB'
+                type: array
+                title: Response Get All Office Types Admin Office Types  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/office-types
+      summary: Create Office Type
+      description: |-
+        Создание нового типа офиса.
+
+        :param office_type_data: Данные нового типа офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном типе офиса.
+      operationId: create_office_type_admin_office_types__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfficeTypeCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfficeTypeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/office-types/{office_type_id}:
+    get:
+      tags:
+        - admin/office-types
+      summary: Get Office Type
+      description: |-
+        Получение информации о типе офиса по его ID.
+
+        :param office_type_id: ID типа офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация о типе офиса.
+      operationId: get_office_type_admin_office_types__office_type_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_type_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Type Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfficeTypeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/office-types
+      summary: Update Office Type
+      description: |-
+        Обновление информации о типе офиса.
+
+        :param office_type_id: ID типа офиса.
+        :param office_type_data: Новые данные о типе офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация о обновленном типе офиса.
+      operationId: update_office_type_admin_office_types__office_type_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_type_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Type Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfficeTypeUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfficeTypeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/office-types
+      summary: Delete Office Type
+      description: |-
+        Удаление типа офиса.
+
+        :param office_type_id: ID типа офиса.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении типа офиса.
+      operationId: delete_office_type_admin_office_types__office_type_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_type_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Type Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/users/:
+    get:
+      tags:
+        - admin/users
+      summary: Get All Users
+      description: |-
+        Получение списка всех пользователей.
+
+        :param current_user: Текущий администратор.
+        :return: Список пользователей.
+      operationId: get_all_users_admin_users__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserInDB-Output'
+                type: array
+                title: Response Get All Users Admin Users  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/users
+      summary: Create User
+      description: |-
+        Создание нового пользователя.
+
+        :param user_data: Данные нового пользователя.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном пользователе.
+      operationId: create_user_admin_users__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDB-Output'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/users/{user_id}:
+    get:
+      tags:
+        - admin/users
+      summary: Get User
+      description: |-
+        Получение информации о пользователе по его ID.
+
+        :param user_id: ID пользователя.
+        :param current_user: Текущий администратор.
+        :return: Информация о пользователе.
+      operationId: get_user_admin_users__user_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDB-Output'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/users
+      summary: Update User
+      description: |-
+        Обновление информации о пользователе.
+
+        :param user_id: ID пользователя.
+        :param user_data: Обновленные данные пользователя.
+        :param current_user: Текущий администратор.
+        :return: Обновленная информация о пользователе.
+      operationId: update_user_admin_users__user_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: User Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDB-Output'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/users
+      summary: Delete User
+      description: |-
+        Удаление пользователя.
+
+        :param user_id: ID пользователя.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении пользователя.
+      operationId: delete_user_admin_users__user_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: User Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/user-roles/:
+    get:
+      tags:
+        - /admin/user-roles
+      summary: Get All User Roles
+      description: |-
+        Получение списка всех пользовательских ролей.
+
+        :param current_user: Текущий администратор.
+        :return: Список пользовательских ролей.
+      operationId: get_all_user_roles_admin_user_roles__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserRoleInDB'
+                type: array
+                title: Response Get All User Roles Admin User Roles  Get
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/user-roles/{user_role_id}:
+    get:
+      tags:
+        - /admin/user-roles
+      summary: Get User Role
+      description: |-
+        Получение информации о пользовательской роли по ее ID.
+
+        :param user_role_id: ID пользовательской роли.
+        :param current_user: Текущий администратор.
+        :return: Информация о пользовательской роли.
+      operationId: get_user_role_admin_user_roles__user_role_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: user_role_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: User Role Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRoleInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/billings/:
+    get:
+      tags:
+        - admin/billings
+      summary: Get All Billings
+      description: |-
+        Получение всех платежей.
+
+        :param current_user: Текущий администратор.
+        :return: Список всех платежей.
+      operationId: get_all_billings_admin_billings__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BillingInDB'
+                type: array
+                title: Response Get All Billings Admin Billings  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/billings
+      summary: Create Billing
+      description: |-
+        Создание нового платежа.
+
+        :param billing_data: Данные для создания платежа.
+        :param current_user: Текущий администратор.
+        :return: Новый платеж.
+      operationId: create_billing_admin_billings__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/billings/{billing_id}:
+    get:
+      tags:
+        - admin/billings
+      summary: Get Billing
+      description: |-
+        Получение информации о платеже по его ID.
+
+        :param billing_id: ID платежа.
+        :param current_user: Текущий администратор.
+        :return: Информация о платеже.
+      operationId: get_billing_admin_billings__billing_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: billing_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Billing Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/billings
+      summary: Update Billing
+      description: |-
+        Обновление информации о платеже.
+
+        :param billing_id: ID платежа для обновления.
+        :param billing_data: Новые данные для платежа.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении.
+      operationId: update_billing_admin_billings__billing_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: billing_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Billing Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/billings
+      summary: Delete Billing
+      description: |-
+        Удаление платежа.
+
+        :param billing_id: ID платежа для удаления.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении.
+      operationId: delete_billing_admin_billings__billing_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: billing_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Billing Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /admin/rented-offices/:
+    get:
+      tags:
+        - admin/rented-offices
+      summary: Get All Rented Offices
+      description: |-
+        Получение списка всех арендованных офисов.
+
+        :param current_user: Текущий администратор.
+        :return: Список арендованных офисов.
+      operationId: get_all_rented_offices_admin_rented_offices__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/RentedOfficeInDB'
+                type: array
+                title: Response Get All Rented Offices Admin Rented Offices  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - admin/rented-offices
+      summary: Create Rented Office
+      description: |-
+        Создание нового арендованного офиса.
+
+        :param office_data: Данные нового арендованного офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация о созданном арендованном офисе.
+      operationId: create_rented_office_admin_rented_offices__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentedOfficeCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentedOfficeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /admin/rented-offices/{office_id}:
+    get:
+      tags:
+        - admin/rented-offices
+      summary: Get Rented Office
+      description: |-
+        Получение информации об арендованном офисе по его ID.
+
+        :param office_id: ID офиса.
+        :param current_user: Текущий администратор.
+        :return: Информация об арендованном офисе.
+      operationId: get_rented_office_admin_rented_offices__office_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RentedOfficeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - admin/rented-offices
+      summary: Update Rented Office
+      description: |-
+        Обновление информации об арендованном офисе.
+
+        :param office_id: ID офиса.
+        :param office_data: Новые данные офиса.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном обновлении информации об арендованном офисе.
+      operationId: update_rented_office_admin_rented_offices__office_id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RentedOfficeUpdate'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - admin/rented-offices
+      summary: Delete Rented Office
+      description: |-
+        Удаление арендованного офиса.
+
+        :param office_id: ID офиса.
+        :param current_user: Текущий администратор.
+        :return: Сообщение об успешном удалении арендованного офиса.
+      operationId: delete_rented_office_admin_rented_offices__office_id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/auth/login:
+    post:
+      tags:
+        - client/auth
+      summary: Login For Access Token
+      description: |-
+        Получение токена доступа (JWT) для аутентификации пользователя.
+
+        :param request: Объект запроса.
+        :param form_data: Данные формы для запроса токена.
+        :return: Токен доступа.
+      operationId: login_for_access_token_client_auth_login_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_for_access_token_client_auth_login_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/auth/logout:
+    post:
+      tags:
+        - client/auth
+      summary: Logout
+      description: |-
+        Выход пользователя из системы и добавление токена в черный список.
+
+        :param request: Объект запроса.
+        :param token: Токен доступа.
+        :param current_user: Текущий пользователь.
+        :return: Сообщение об успешном выходе.
+      operationId: logout_client_auth_logout_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - OAuth2PasswordBearer: []
+  /client/auth/validate:
+    post:
+      tags:
+        - client/auth
+      summary: Logout
+      description: |-
+        Разлогирование пользователя.
+
+        :param token: Токен доступа.
+        :param current_user: Текущий пользователь.
+        :return: Сообщение о успешной проверке токена.
+      operationId: logout_client_auth_validate_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      security:
+        - OAuth2PasswordBearer: []
+  /client/auth/me:
+    get:
+      tags:
+        - client/auth
+      summary: Get Current Admin User Info
+      description: |-
+        Получение информации о текущем пользователе.
+
+        :param request: Объект запроса.
+        :param current_user: Текущий пользователь.
+        :return: Информация о текущем пользователе.
+      operationId: get_current_admin_user_info_client_auth_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDBResponse'
+      security:
+        - OAuth2PasswordBearer: []
+  /client/locations/:
+    get:
+      tags:
+        - client/locations
+      summary: Read Available Locations
+      description: |-
+        Получение доступных локаций для текущего арендатора.
+
+        :param current_user: Текущий пользователь.
+        :return: Список доступных локаций.
+      operationId: read_available_locations_client_locations__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/api__models__client__locations_models__LocationInDB'
+                type: array
+                title: Response Read Available Locations Client Locations  Get
+      security:
+        - OAuth2PasswordBearer: []
+  /client/locations/{location_id}:
+    get:
+      tags:
+        - client/locations
+      summary: Read Location
+      description: |-
+        Получение локации по её идентификатору для текущего арендатора.
+
+        :param location_id: Идентификатор локации.
+        :param current_user: Текущий пользователь.
+        :return: Локация.
+      operationId: read_location_client_locations__location_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: location_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Location Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__client__locations_models__LocationInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/offices/:
+    get:
+      tags:
+        - client/offices
+      summary: Get All Offices
+      description: |-
+        Получить список всех офисов.
+
+        :param current_user: Текущий пользователь.
+        :return: Список всех офисов.
+      operationId: get_all_offices_client_offices__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/api__models__client__offices_models__OfficeInDB'
+                type: array
+                title: Response Get All Offices Client Offices  Get
+      security:
+        - OAuth2PasswordBearer: []
+  /client/offices/{office_id}:
+    get:
+      tags:
+        - client/offices
+      summary: Get Office
+      description: |-
+        Получить информацию об офисе по его идентификатору.
+
+        :param office_id: Идентификатор офиса.
+        :param current_user: Текущий пользователь.
+        :return: Информация об офисе.
+      operationId: get_office_client_offices__office_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__client__offices_models__OfficeInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/renters/:
+    get:
+      tags:
+        - client/renters
+      summary: Get All Renters
+      description: |-
+        Получить список всех арендаторов, связанных с текущим пользователем.
+
+        :param current_user: Текущий пользователь.
+        :return: Список всех арендаторов.
+      operationId: get_all_renters_client_renters__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/api__models__client__renters_models__RenterInDB'
+                type: array
+                title: Response Get All Renters Client Renters  Get
+      security:
+        - OAuth2PasswordBearer: []
+  /client/renters/{renter_id}:
+    get:
+      tags:
+        - client/renters
+      summary: Get Renter
+      description: |-
+        Получить информацию об арендаторе по его идентификатору, связанного с текущим пользователем.
+
+        :param renter_id: Идентификатор арендатора.
+        :param current_user: Текущий пользователь.
+        :return: Информация об арендаторе.
+      operationId: get_renter_client_renters__renter_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: renter_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Renter Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/api__models__client__renters_models__RenterInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/users/:
+    get:
+      tags:
+        - client/users
+      summary: Get Users
+      description: |-
+        Получение списка всех пользователей для текущего арендатора.
+
+        :param current_user: Текущий пользователь.
+        :return: Список всех пользователей.
+      operationId: get_users_client_users__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/UserInDBResponse'
+                type: array
+                title: Response Get Users Client Users  Get
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - client/users
+      summary: Create User
+      description: |-
+        Создание нового пользователя для текущего арендатора.
+
+        :param user: Информация о новом пользователе.
+        :param current_user: Текущий пользователь.
+        :return: Созданный пользователь.
+        :raises HTTPException: Если у текущего пользователя нет прав на это действие.
+      operationId: create_user_client_users__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInDB-Input'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDBResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /client/users/{id}:
+    get:
+      tags:
+        - client/users
+      summary: Get User
+      description: |-
+        Получение информации о пользователе по его идентификатору.
+
+        :param id: Идентификатор пользователя.
+        :param current_user: Текущий пользователь.
+        :return: Информация о пользователе.
+        :raises HTTPException: Если пользователь не найден.
+      operationId: get_user_client_users__id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDBResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    put:
+      tags:
+        - client/users
+      summary: Update User
+      description: |-
+        Обновление информации о пользователе.
+
+        :param id: Идентификатор пользователя для обновления.
+        :param user: Обновленная информация о пользователе.
+        :param current_user: Текущий пользователь.
+        :return: Обновленная информация о пользователе.
+        :raises HTTPException: Если пользователь не найден или текущий пользователь не имеет прав на это действие.
+      operationId: update_user_client_users__id__put
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInDB-Input'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInDBResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+        - client/users
+      summary: Delete User
+      description: |-
+        Удаление пользователя.
+
+        :param id: Идентификатор пользователя для удаления.
+        :param current_user: Текущий пользователь.
+        :return: Сообщение об успешном удалении.
+        :raises HTTPException: Если пользователь не найден или текущий пользователь не имеет прав на это действие.
+      operationId: delete_user_client_users__id__delete
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Delete User Client Users  Id  Delete
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/billings/:
+    get:
+      tags:
+        - client/billings
+      summary: Get All Billings
+      description: |-
+        Получение всех счетов для текущего арендатора.
+
+        :param current_user: Текущий пользователь.
+        :return: Список счетов.
+      operationId: get_all_billings_client_billings__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/BillingInDB'
+                type: array
+                title: Response Get All Billings Client Billings  Get
+      security:
+        - OAuth2PasswordBearer: []
+  /client/billings/{billing_id}:
+    get:
+      tags:
+        - client/billings
+      summary: Get Billing
+      description: |-
+        Получение счета по его идентификатору для текущего арендатора.
+
+        :param billing_id: Идентификатор счета.
+        :param current_user: Текущий пользователь.
+        :return: Счет.
+      operationId: get_billing_client_billings__billing_id__get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: billing_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Billing Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingInDB'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/locks/{office_id}/unlock:
+    get:
+      tags:
+        - client/locks
+      summary: Unlock Office
+      description: |-
+        Открытие замка в офисе по его идентификатору.
+
+        :param office_id: Идентификатор офиса.
+        :return: Успешное открытие замка.
+      operationId: unlock_office_client_locks__office_id__unlock_get
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /client/locks/{office_id}/lock:
+    post:
+      tags:
+        - client/locks
+      summary: Lock Office
+      description: |-
+        Закрытие замка в офисе по его идентификатору.
+
+        :param office_id: Идентификатор офиса.
+        :param current_user: Текущий пользователь.
+        :return: Успешное закрытие замка.
+      operationId: lock_office_client_locks__office_id__lock_post
+      security:
+        - OAuth2PasswordBearer: []
+      parameters:
+        - name: office_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            title: Office Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AdminInDBResponse:
+      properties:
+        user_id:
+          type: integer
+          title: User Id
+        username:
+          type: string
+          title: Username
+        first_name:
+          type: string
+          title: First Name
+        last_name:
+          type: string
+          title: Last Name
+        email:
+          type: string
+          title: Email
+        phone_number:
+          type: string
+          title: Phone Number
+      type: object
+      required:
+        - user_id
+        - username
+        - first_name
+        - last_name
+        - email
+        - phone_number
+      title: AdminInDBResponse
+    BillingCreate:
+      properties:
+        number:
+          type: integer
+          title: Number
+        date:
+          type: string
+          format: date
+          title: Date
+        payer:
+          type: integer
+          title: Payer
+        provider:
+          type: integer
+          title: Provider
+        amount:
+          type: integer
+          title: Amount
+        paid:
+          type: boolean
+          title: Paid
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+        - number
+        - date
+        - payer
+        - provider
+        - amount
+        - paid
+        - description
+      title: BillingCreate
+    BillingInDB:
+      properties:
+        number:
+          type: integer
+          title: Number
+        date:
+          type: string
+          format: date
+          title: Date
+        payer:
+          type: integer
+          title: Payer
+        provider:
+          type: integer
+          title: Provider
+        amount:
+          type: integer
+          title: Amount
+        paid:
+          type: boolean
+          title: Paid
+        description:
+          type: string
+          title: Description
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - number
+        - date
+        - payer
+        - provider
+        - amount
+        - paid
+        - description
+        - id
+      title: BillingInDB
+    BillingUpdate:
+      properties:
+        number:
+          type: integer
+          title: Number
+        date:
+          type: string
+          format: date
+          title: Date
+        payer:
+          type: integer
+          title: Payer
+        provider:
+          type: integer
+          title: Provider
+        amount:
+          type: integer
+          title: Amount
+        paid:
+          type: boolean
+          title: Paid
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+        - number
+        - date
+        - payer
+        - provider
+        - amount
+        - paid
+        - description
+      title: BillingUpdate
+    Body_login_for_access_token_admin_auth_login_post:
+      properties:
+        grant_type:
+          anyOf:
+            - type: string
+              pattern: password
+            - type: 'null'
+          title: Grant Type
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          title: Password
+        scope:
+          type: string
+          title: Scope
+          default: ''
+        client_id:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Client Id
+        client_secret:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Client Secret
+      type: object
+      required:
+        - username
+        - password
+      title: Body_login_for_access_token_admin_auth_login_post
+    Body_login_for_access_token_client_auth_login_post:
+      properties:
+        grant_type:
+          anyOf:
+            - type: string
+              pattern: password
+            - type: 'null'
+          title: Grant Type
+        username:
+          type: string
+          title: Username
+        password:
+          type: string
+          title: Password
+        scope:
+          type: string
+          title: Scope
+          default: ''
+        client_id:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Client Id
+        client_secret:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Client Secret
+      type: object
+      required:
+        - username
+        - password
+      title: Body_login_for_access_token_client_auth_login_post
+    BusinessProfile:
+      properties:
+        id:
+          type: integer
+          title: Id
+        display_name:
+          type: string
+          title: Display Name
+        inn:
+          type: string
+          title: Inn
+        ogrn:
+          type: string
+          title: Ogrn
+        legal_address:
+          type: string
+          title: Legal Address
+      type: object
+      required:
+        - id
+        - display_name
+        - inn
+        - ogrn
+        - legal_address
+      title: BusinessProfile
+    BusinessProfileCreate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        inn:
+          type: string
+          title: Inn
+        ogrn:
+          type: string
+          title: Ogrn
+        legal_address:
+          type: string
+          title: Legal Address
+      type: object
+      required:
+        - display_name
+        - inn
+        - ogrn
+        - legal_address
+      title: BusinessProfileCreate
+    BusinessProfileInDB:
+      properties:
+        id:
+          type: integer
+          title: Id
+        display_name:
+          type: string
+          title: Display Name
+        inn:
+          type: string
+          title: Inn
+        ogrn:
+          type: string
+          title: Ogrn
+        legal_address:
+          type: string
+          title: Legal Address
+      type: object
+      required:
+        - id
+        - display_name
+        - inn
+        - ogrn
+        - legal_address
+      title: BusinessProfileInDB
+    BusinessProfileUpdate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        inn:
+          type: string
+          title: Inn
+        ogrn:
+          type: string
+          title: Ogrn
+        legal_address:
+          type: string
+          title: Legal Address
+      type: object
+      required:
+        - display_name
+        - inn
+        - ogrn
+        - legal_address
+      title: BusinessProfileUpdate
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    LocationCreate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        business_profile:
+          type: integer
+          title: Business Profile
+        address:
+          type: string
+          title: Address
+        city:
+          type: string
+          title: City
+        metro_station:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Metro Station
+        district:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: District
+      type: object
+      required:
+        - display_name
+        - business_profile
+        - address
+        - city
+      title: LocationCreate
+    LocationUpdate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        business_profile:
+          type: integer
+          title: Business Profile
+        address:
+          type: string
+          title: Address
+        city:
+          type: string
+          title: City
+        metro_station:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Metro Station
+        district:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: District
+      type: object
+      required:
+        - display_name
+        - business_profile
+        - address
+        - city
+      title: LocationUpdate
+    LockCreate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        lock_system:
+          type: integer
+          title: Lock System
+        lock_service_id:
+          type: integer
+          title: Lock Service Id
+      type: object
+      required:
+        - display_name
+        - lock_system
+        - lock_service_id
+      title: LockCreate
+    LockInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        lock_system:
+          type: integer
+          title: Lock System
+        lock_service_id:
+          type: integer
+          title: Lock Service Id
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - lock_system
+        - lock_service_id
+        - id
+      title: LockInDB
+    LockPasscodeCreate:
+      properties:
+        passcode:
+          type: string
+          title: Passcode
+        lock_id:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Lock Id
+      type: object
+      required:
+        - passcode
+        - lock_id
+      title: LockPasscodeCreate
+    LockPasscodeInDB:
+      properties:
+        passcode:
+          type: string
+          title: Passcode
+        id:
+          type: integer
+          title: Id
+        lock_id:
+          type: integer
+          title: Lock Id
+      type: object
+      required:
+        - passcode
+        - id
+        - lock_id
+      title: LockPasscodeInDB
+    LockPasscodeUpdate:
+      properties:
+        passcode:
+          type: string
+          title: Passcode
+      type: object
+      required:
+        - passcode
+      title: LockPasscodeUpdate
+    LockSystemInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        id:
+          type: integer
+          title: Id
+        api_key:
+          type: string
+          title: Api Key
+      type: object
+      required:
+        - display_name
+        - id
+        - api_key
+      title: LockSystemInDB
+    LockSystemUpdate:
+      properties:
+        api_key:
+          type: string
+          title: Api Key
+      type: object
+      required:
+        - api_key
+      title: LockSystemUpdate
+    LockUpdate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        lock_system:
+          type: integer
+          title: Lock System
+        lock_service_id:
+          type: integer
+          title: Lock Service Id
+      type: object
+      required:
+        - display_name
+        - lock_system
+        - lock_service_id
+      title: LockUpdate
+    OfficeCreate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        office_type:
+          type: integer
+          title: Office Type
+        area:
+          type: integer
+          title: Area
+        price:
+          type: integer
+          title: Price
+        room_count:
+          type: integer
+          title: Room Count
+        location:
+          type: integer
+          title: Location
+        floor:
+          type: integer
+          title: Floor
+        office_lock:
+          type: integer
+          title: Office Lock
+      type: object
+      required:
+        - display_name
+        - office_type
+        - area
+        - price
+        - room_count
+        - location
+        - floor
+        - office_lock
+      title: OfficeCreate
+    OfficeTypeCreate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+      type: object
+      required:
+        - display_name
+      title: OfficeTypeCreate
+    OfficeTypeInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - id
+      title: OfficeTypeInDB
+    OfficeTypeUpdate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+      type: object
+      required:
+        - display_name
+      title: OfficeTypeUpdate
+    OfficeUpdate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        office_type:
+          type: integer
+          title: Office Type
+        area:
+          type: integer
+          title: Area
+        price:
+          type: integer
+          title: Price
+        room_count:
+          type: integer
+          title: Room Count
+        location:
+          type: integer
+          title: Location
+        floor:
+          type: integer
+          title: Floor
+        office_lock:
+          type: integer
+          title: Office Lock
+      type: object
+      required:
+        - display_name
+        - office_type
+        - area
+        - price
+        - room_count
+        - location
+        - floor
+        - office_lock
+      title: OfficeUpdate
+    RentedOfficeCreate:
+      properties:
+        office:
+          type: integer
+          title: Office
+        renter:
+          type: integer
+          title: Renter
+        price:
+          type: integer
+          title: Price
+        description:
+          type: string
+          title: Description
+        start_date:
+          type: string
+          format: date-time
+          title: Start Date
+        end_date:
+          type: string
+          format: date-time
+          title: End Date
+      type: object
+      required:
+        - office
+        - renter
+        - price
+        - description
+        - start_date
+        - end_date
+      title: RentedOfficeCreate
+    RentedOfficeInDB:
+      properties:
+        office:
+          type: integer
+          title: Office
+        renter:
+          type: integer
+          title: Renter
+        price:
+          type: integer
+          title: Price
+        description:
+          type: string
+          title: Description
+        start_date:
+          type: string
+          format: date-time
+          title: Start Date
+        end_date:
+          type: string
+          format: date-time
+          title: End Date
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - office
+        - renter
+        - price
+        - description
+        - start_date
+        - end_date
+        - id
+      title: RentedOfficeInDB
+    RentedOfficeUpdate:
+      properties:
+        office:
+          type: integer
+          title: Office
+        renter:
+          type: integer
+          title: Renter
+        price:
+          type: integer
+          title: Price
+        description:
+          type: string
+          title: Description
+        start_date:
+          type: string
+          format: date-time
+          title: Start Date
+        end_date:
+          type: string
+          format: date-time
+          title: End Date
+      type: object
+      required:
+        - office
+        - renter
+        - price
+        - description
+        - start_date
+        - end_date
+      title: RentedOfficeUpdate
+    RenterCreate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        orgn:
+          type: string
+          title: Orgn
+        holder:
+          type: integer
+          title: Holder
+        phone_number:
+          type: string
+          title: Phone Number
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+        - display_name
+        - orgn
+        - holder
+        - phone_number
+        - email
+      title: RenterCreate
+    RenterUpdate:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        orgn:
+          type: string
+          title: Orgn
+        holder:
+          type: integer
+          title: Holder
+        phone_number:
+          type: string
+          title: Phone Number
+        email:
+          type: string
+          format: email
+          title: Email
+      type: object
+      required:
+        - display_name
+        - orgn
+        - holder
+        - phone_number
+        - email
+      title: RenterUpdate
+    Token:
+      properties:
+        access_token:
+          type: string
+          title: Access Token
+        token_type:
+          type: string
+          title: Token Type
+      type: object
+      required:
+        - access_token
+        - token_type
+      title: Token
+    UserCreate:
+      properties:
+        first_name:
+          type: string
+          title: First Name
+        middle_name:
+          type: string
+          title: Middle Name
+        last_name:
+          type: string
+          title: Last Name
+        phone_number:
+          type: string
+          title: Phone Number
+        username:
+          type: string
+          title: Username
+        role:
+          type: integer
+          title: Role
+        renter:
+          type: integer
+          title: Renter
+        telegram:
+          anyOf:
+            - type: integer
+          title: Telegram
+        password:
+          type: string
+          title: Password
+        salt:
+          type: string
+          title: Salt
+      type: object
+      required:
+        - first_name
+        - middle_name
+        - last_name
+        - phone_number
+        - username
+        - role
+        - renter
+        - password
+        - salt
+      title: UserCreate
+    UserInDB-Input:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        hashed_password:
+          type: string
+          title: Hashed Password
+        salt:
+          type: string
+          title: Salt
+        first_name:
+          type: string
+          title: First Name
+        middle_name:
+          type: string
+          title: Middle Name
+        last_name:
+          type: string
+          title: Last Name
+        role:
+          type: integer
+          title: Role
+        renter:
+          type: integer
+          title: Renter
+        phone_number:
+          type: string
+          title: Phone Number
+        telegram:
+          type: integer
+          title: Telegram
+      type: object
+      required:
+        - id
+        - username
+        - hashed_password
+        - salt
+        - first_name
+        - middle_name
+        - last_name
+        - role
+        - renter
+        - phone_number
+        - telegram
+      title: UserInDB
+    UserInDB-Output:
+      properties:
+        first_name:
+          type: string
+          title: First Name
+        middle_name:
+          type: string
+          title: Middle Name
+        last_name:
+          type: string
+          title: Last Name
+        phone_number:
+          type: string
+          title: Phone Number
+        username:
+          type: string
+          title: Username
+        role:
+          type: integer
+          title: Role
+        renter:
+          type: integer
+          title: Renter
+        telegram:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Telegram
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - first_name
+        - middle_name
+        - last_name
+        - phone_number
+        - username
+        - role
+        - renter
+        - id
+      title: UserInDB
+    UserInDBResponse:
+      properties:
+        id:
+          type: integer
+          title: Id
+        username:
+          type: string
+          title: Username
+        first_name:
+          type: string
+          title: First Name
+        middle_name:
+          type: string
+          title: Middle Name
+        last_name:
+          type: string
+          title: Last Name
+        role:
+          type: integer
+          title: Role
+        renter:
+          type: integer
+          title: Renter
+        phone_number:
+          type: string
+          title: Phone Number
+        telegram:
+          type: integer
+          title: Telegram
+      type: object
+      required:
+        - id
+        - username
+        - first_name
+        - middle_name
+        - last_name
+        - role
+        - renter
+        - phone_number
+        - telegram
+      title: UserInDBResponse
+    UserRoleInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - id
+      title: UserRoleInDB
+    UserUpdate:
+      properties:
+        first_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: First Name
+        middle_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Middle Name
+        last_name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Last Name
+        phone_number:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Phone Number
+        username:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Username
+        password:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Password
+        salt:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Salt
+        role:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Role
+        renter:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Renter
+        telegram:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Telegram
+      type: object
+      title: UserUpdate
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
+    api__models__admin__locations_models__LocationInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        business_profile:
+          type: integer
+          title: Business Profile
+        address:
+          type: string
+          title: Address
+        city:
+          type: string
+          title: City
+        metro_station:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: Metro Station
+        district:
+          anyOf:
+            - type: string
+            - type: 'null'
+          title: District
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - business_profile
+        - address
+        - city
+        - id
+      title: LocationInDB
+    api__models__admin__offices_models__OfficeInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        office_type:
+          type: integer
+          title: Office Type
+        area:
+          type: integer
+          title: Area
+        price:
+          type: integer
+          title: Price
+        room_count:
+          type: integer
+          title: Room Count
+        location:
+          type: integer
+          title: Location
+        floor:
+          type: integer
+          title: Floor
+        office_lock:
+          type: integer
+          title: Office Lock
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - office_type
+        - area
+        - price
+        - room_count
+        - location
+        - floor
+        - office_lock
+        - id
+      title: OfficeInDB
+    api__models__admin__renters_models__RenterInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        orgn:
+          type: string
+          title: Orgn
+        holder:
+          type: integer
+          title: Holder
+        phone_number:
+          type: string
+          title: Phone Number
+        email:
+          type: string
+          format: email
+          title: Email
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - orgn
+        - holder
+        - phone_number
+        - email
+        - id
+      title: RenterInDB
+    api__models__client__locations_models__LocationInDB:
+      properties:
+        id:
+          type: integer
+          title: Id
+        display_name:
+          type: string
+          title: Display Name
+        address:
+          type: string
+          title: Address
+        city:
+          type: string
+          title: City
+        metro_station:
+          type: string
+          title: Metro Station
+        district:
+          type: string
+          title: District
+      type: object
+      required:
+        - id
+        - display_name
+        - address
+        - city
+        - metro_station
+        - district
+      title: LocationInDB
+    api__models__client__offices_models__OfficeInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        office_type:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Office Type
+        area:
+          type: integer
+          title: Area
+        price:
+          type: integer
+          title: Price
+        room_count:
+          type: integer
+          title: Room Count
+        location:
+          anyOf:
+            - type: integer
+            - type: 'null'
+          title: Location
+        floor:
+          type: integer
+          title: Floor
+        office_lock:
+          type: integer
+          title: Office Lock
+        id:
+          type: integer
+          title: Id
+      type: object
+      required:
+        - display_name
+        - office_type
+        - area
+        - price
+        - room_count
+        - location
+        - floor
+        - office_lock
+        - id
+      title: OfficeInDB
+    api__models__client__renters_models__RenterInDB:
+      properties:
+        display_name:
+          type: string
+          title: Display Name
+        orgn:
+          type: string
+          title: Orgn
+        phone_number:
+          type: string
+          title: Phone Number
+        email:
+          type: string
+          title: Email
+        id:
+          type: integer
+          title: Id
+        holder:
+          type: integer
+          title: Holder
+      type: object
+      required:
+        - display_name
+        - orgn
+        - phone_number
+        - email
+        - id
+        - holder
+      title: RenterInDB
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: token
